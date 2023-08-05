@@ -9,8 +9,7 @@ use Illuminate\Http\Request;
 class HomeController extends Controller
 {
     public function index(){
-        $admin = Auth::guard('admin')->user();
-        return view('admin.dashboard')->with(['name' => $admin->name]);
+        return view('admin.dashboard');
     }
 
     public function logout(){
