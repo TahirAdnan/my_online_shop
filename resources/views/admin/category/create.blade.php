@@ -19,7 +19,7 @@
 <section class="content">
     <!-- Default box -->
     <div class="container-fluid">
-        <form action="{{ route('categories.store') }}" method="post" id="categoryForm" name="categoryForm">
+        <form action="" method="post" id="categoryForm" name="categoryForm">
             @csrf
             <div class="card">
                 <div class="card-body">
@@ -28,12 +28,14 @@
                             <div class="mb-3">
                                 <label for="name">Name</label>
                                 <input type="text" name="name" id="name" class="form-control" placeholder="Name">
+                                <p></p>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="mb-3">
                                 <label for="slug">Slug</label>
                                 <input type="text" name="slug" id="slug" class="form-control" placeholder="Slug">
+                                <p></p>
                             </div>
                         </div>
                         <div class="col-md-6">
@@ -42,7 +44,7 @@
                                 <select name="status" id="status" class="form-control">
                                     <option value="1">Active</option>
                                     <option value="0">Block</option>
-                                </select>
+                                </select>                               
                                 <!-- <input type="text" name="status" id="status" class="form-control" placeholder="Slug"> -->
                             </div>
                         </div>
@@ -61,7 +63,42 @@
 @endsection
 
 @section('customJS')
-<script>
-    console.log('hello')
+
+
+<script type="text/javascript">
+    $('#categoryForm').submit(function(event) {
+        event.preventDefault();
+        var element = $(this);    
+        $.ajax({
+            url: '{{ route("categories.store") }}',
+            type: 'post',
+            data: element.serializeArray(),
+            dataType: 'json',
+            success: function(response) {
+                if(response['status'] == true){
+                    $('#name').removeClass('is-invalid').siblings('p').removeClass('invalid-feedback').html("");
+                    $('#slug').removeClass('is-invalid').siblings('p').removeClass('invalid-feedback').html("");
+                } else {
+                    var errors = response['errors'];
+                    if(errors['name']){
+                        $('#name').addClass('is-invalid').siblings('p').addClass('invalid-feedback').html(errors['name']);
+                    } else {
+                        $('#name').removeClass('is-invalid').siblings('p').removeClass('invalid-feedback').html("");
+                    }
+
+                    if(errors['slug']){
+                        $('#slug').addClass('is-invalid').siblings('p').addClass('invalid-feedback').html(errors['slug']);
+                    } else {
+                        $('#slug').removeClass('is-invalid').siblings('p').removeClass('invalid-feedback').html("");
+                    }
+                }          
+            },
+            error: function(jqXHR, exception) {
+                console.log("Something went wrong");
+            }
+        })
+    });
 </script>
+
+
 @endsection

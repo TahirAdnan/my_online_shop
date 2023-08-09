@@ -3,7 +3,9 @@
 use App\Http\Controllers\admin\AdminLoginController;
 use App\Http\Controllers\admin\HomeController;
 use App\Http\Controllers\admin\CategoryController;
+use GuzzleHttp\Psr7\Request;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Validator;
 
 /*
 |--------------------------------------------------------------------------
@@ -34,6 +36,6 @@ Route::group(['prefix' => 'admin'], function(){
 
         // create category
         Route::get('/categories/create', [CategoryController::class, 'create'] )->name('categories.create');
-        Route::post('/categories/store', [CategoryController::class, 'store'] )->name('categories.store');
+        Route::post('/categories', [CategoryController::class, 'store'] )->name('categories.store');
     });
 });
