@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\Models\Category;
+use Illuminate\Support\Str;
 
 
 
@@ -19,6 +20,7 @@ class CategoryController extends Controller
         return view('admin.category.create');
     }
 
+    // Store a category function
     public function store(Request $request){
         $validator = Validator::make($request->all(),[
             'name' => 'required',
@@ -44,6 +46,20 @@ class CategoryController extends Controller
             ]);
         }
         
+    }
+
+    // Slug generation
+    public function getSlug(Request $request){
+        $slug = '';
+        if(!empty($request->title)){
+            $slug = Str::slug($request->title);
+        }
+
+        return response()->json([
+            'status' => true,
+            'slug' => $slug,
+        ]);
+
     }
 
 }

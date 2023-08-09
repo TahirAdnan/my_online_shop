@@ -34,7 +34,7 @@
                         <div class="col-md-6">
                             <div class="mb-3">
                                 <label for="slug">Slug</label>
-                                <input type="text" name="slug" id="slug" class="form-control" placeholder="Slug">
+                                <input type="text" readonly name="slug" id="slug" class="form-control" placeholder="Slug">
                                 <p></p>
                             </div>
                         </div>
@@ -66,6 +66,7 @@
 
 
 <script type="text/javascript">
+    // Validation and category store ajax function
     $('#categoryForm').submit(function(event) {
         event.preventDefault();
         var element = $(this);    
@@ -97,6 +98,25 @@
                 console.log("Something went wrong");
             }
         })
+    });
+
+    // Slug generation on behalf of name
+    $('#name').change(function(){
+        var element = $(this);    
+        $.ajax({
+            url: '{{ route("getSlug") }}',
+            type: 'get',
+            data: {title: element.val()},
+            dataType: 'json',
+            success: function(response) {
+                if(response['status'] == true){
+                    $('#slug').val(response['slug']);
+                }
+            },
+                error: function(jqXHR, exception) {
+                console.log("Something went wrong");
+            }
+        });
     });
 </script>
 
