@@ -13,7 +13,8 @@ use Illuminate\Support\Str;
 class CategoryController extends Controller
 {
     public function index(){
-        echo "Index page";
+        $categories = Category::latest()->paginate(10);
+        return view('admin.category.list', compact('categories'));
     }
 
     public function create(){

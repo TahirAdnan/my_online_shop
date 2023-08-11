@@ -12,6 +12,13 @@ class CategorySeeder extends Seeder
      */
     public function run(): void
     {
-        //
+    //  Users data feeding
+        // \App\Models\User::factory(20)->create([
+        //     'name' => 'Test User',
+        //     'email' => 'test@test.com',
+        // ]);
+
+    //  Category data feeding        
+        \App\Models\Category::factory()->count(30)->create();
     }
 }
