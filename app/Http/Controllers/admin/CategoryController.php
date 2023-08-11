@@ -12,8 +12,13 @@ use Illuminate\Support\Str;
 
 class CategoryController extends Controller
 {
-    public function index(){
-        $categories = Category::latest()->paginate(10);
+    public function index(Request $request){
+        // $categories = Category::latest()->paginate(10);
+        $categories = Category::latest();
+        if(!empty($request)){
+            $categories = $categories->where('name', 'like', '%'.$request->keyword.'%');
+        }
+        $categories =  $categories->paginate(10);
         return view('admin.category.list', compact('categories'));
     }
 
