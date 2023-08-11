@@ -38,8 +38,8 @@ class CategoryController extends Controller
             $categories->slug = $request->slug;
             $categories->status = $request->status;
             $categories->save();
-
-
+            
+            session()->flash('success', 'Category added successfully');
             return response()->json([
                 'status' => true,
                 'message' => 'Category created successfully'

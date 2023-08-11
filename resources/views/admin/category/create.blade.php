@@ -52,7 +52,7 @@
                 </div>
             </div>
             <div class="pb-5 pt-3">
-                <button type="submit" class="btn btn-primary">Create</button>
+                <button type="submit" id="createBtn" class="btn btn-primary">Create</button>
                 <a href="#" class="btn btn-outline-dark ml-3">Cancel</a>
             </div>
         </form>
@@ -64,12 +64,12 @@
 
 @section('customJS')
 
-
 <script type="text/javascript">
     // Validation and category store ajax function
     $('#categoryForm').submit(function(event) {
         event.preventDefault();
-        var element = $(this);    
+        var element = $(this);   
+        $('#createBtn').prop('disabled', true); 
         $.ajax({
             url: '{{ route("categories.store") }}',
             type: 'post',
@@ -77,9 +77,12 @@
             dataType: 'json',
             success: function(response) {
                 if(response['status'] == true){
+                    $('#createBtn').prop('disabled', false); 
+                    window.location.href="{{route('categories.index')}}";
                     $('#name').removeClass('is-invalid').siblings('p').removeClass('invalid-feedback').html("");
                     $('#slug').removeClass('is-invalid').siblings('p').removeClass('invalid-feedback').html("");
                 } else {
+
                     var errors = response['errors'];
                     if(errors['name']){
                         $('#name').addClass('is-invalid').siblings('p').addClass('invalid-feedback').html(errors['name']);
@@ -103,6 +106,7 @@
     // Slug generation on behalf of name
     $('#name').change(function(){
         var element = $(this);    
+        $('#createBtn').prop('disabled', true); 
         $.ajax({
             url: '{{ route("getSlug") }}',
             type: 'get',
@@ -110,6 +114,7 @@
             dataType: 'json',
             success: function(response) {
                 if(response['status'] == true){
+                    $('#createBtn').prop('disabled', false); 
                     $('#slug').val(response['slug']);
                 }
             },
