@@ -21,20 +21,21 @@
     <!-- Default box -->
     <div class="container-fluid">
         <div class="card">
-            <div class="card-header">
-                <form action="{{route('categories.index')}}" method="get">
-                    <div class="card-tools">
-                        <div class="input-group input-group" style="width: 250px;">
-                            <input value="{{old('keyword')}}" type="text" name="keyword" class="form-control float-right" placeholder="Search">
-                            <div class="input-group-append">
-                                <button type="submit" class="btn btn-default">
-                                    <i class="fas fa-search"></i>
-                                </button>
+            <form action="{{route('categories.index')}}" method="get">         
+                <div class="card-header">
+                    <a href="{{route('categories.index')}}" class="btn btn-outline-dark ml-3">Reset</a>
+                        <div class="card-tools">
+                            <div class="input-group input-group" style="width: 250px;">
+                                <input value="{{Request::get('keyword')}}" type="text" name="keyword" class="form-control float-right" placeholder="Search">
+                                <div class="input-group-append">
+                                    <button type="submit" class="btn btn-default">
+                                        <i class="fas fa-search"></i>
+                                    </button>
+                                </div>
                             </div>
                         </div>
-                    </div>
+                   </div>
                 </form>
-            </div>
             <div class="card-body table-responsive p-0">
                 <table class="table table-hover text-nowrap">
                     <thead>
