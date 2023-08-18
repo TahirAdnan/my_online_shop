@@ -44,18 +44,29 @@
                                 <select name="status" id="status" class="form-control">
                                     <option value="1">Active</option>
                                     <option value="0">Block</option>
-                                </select>                               
-                                <!-- <input type="text" name="status" id="status" class="form-control" placeholder="Slug"> -->
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="image">Image</label>
+                                <input type="hidden" name="image_id" id="image_id" class="form-control">
+                                <div id="image" class="dropzone dz-clickable">
+                                    <div class="dz-message needsclick">
+                                        <br> Drop File Here or Click to Upload Fie <br><br>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="pb-5 pt-3">
-                <button type="submit" id="createBtn" class="btn btn-primary">Create</button>
-                <a href="#" class="btn btn-outline-dark ml-3">Cancel</a>
-            </div>
-        </form>
+    </div>
+    <div class="pb-5 pt-3">
+        <button type="submit" id="createBtn" class="btn btn-primary">Create</button>
+        <a href="#" class="btn btn-outline-dark ml-3">Cancel</a>
+    </div>
+    </form>
     </div>
     <!-- /.card -->
 </section>
@@ -68,34 +79,33 @@
     // Validation and category store ajax function
     $('#categoryForm').submit(function(event) {
         event.preventDefault();
-        var element = $(this);   
-        $('#createBtn').prop('disabled', true); 
+        var element = $(this);
+        $('#createBtn').prop('disabled', true);
         $.ajax({
             url: '{{ route("categories.store") }}',
             type: 'post',
             data: element.serializeArray(),
             dataType: 'json',
             success: function(response) {
-                if(response['status'] == true){
-                    $('#createBtn').prop('disabled', false); 
-                    window.location.href="{{route('categories.index')}}";
+                if (response['status'] == true) {
+                    $('#createBtn').prop('disabled', false);
+                    window.location.href = "{{route('categories.index')}}";
                     $('#name').removeClass('is-invalid').siblings('p').removeClass('invalid-feedback').html("");
                     $('#slug').removeClass('is-invalid').siblings('p').removeClass('invalid-feedback').html("");
                 } else {
-
                     var errors = response['errors'];
-                    if(errors['name']){
+                    if (errors['name']) {
                         $('#name').addClass('is-invalid').siblings('p').addClass('invalid-feedback').html(errors['name']);
                     } else {
                         $('#name').removeClass('is-invalid').siblings('p').removeClass('invalid-feedback').html("");
                     }
 
-                    if(errors['slug']){
+                    if (errors['slug']) {
                         $('#slug').addClass('is-invalid').siblings('p').addClass('invalid-feedback').html(errors['slug']);
                     } else {
                         $('#slug').removeClass('is-invalid').siblings('p').removeClass('invalid-feedback').html("");
                     }
-                }          
+                }
             },
             error: function(jqXHR, exception) {
                 console.log("Something went wrong");
@@ -104,24 +114,52 @@
     });
 
     // Slug generation on behalf of name
-    $('#name').change(function(){
-        var element = $(this);    
-        $('#createBtn').prop('disabled', true); 
+    $('#name').change(function() {
+        var element = $(this);
+        $('#createBtn').prop('disabled', true);
         $.ajax({
             url: '{{ route("getSlug") }}',
             type: 'get',
-            data: {title: element.val()},
+            data: {
+                title: element.val()
+            },
             dataType: 'json',
             success: function(response) {
-                if(response['status'] == true){
-                    $('#createBtn').prop('disabled', false); 
+                if (response['status'] == true) {
+                    $('#createBtn').prop('disabled', false);
                     $('#slug').val(response['slug']);
                 }
             },
-                error: function(jqXHR, exception) {
+            error: function(jqXHR, exception) {
                 console.log("Something went wrong");
             }
         });
+    });
+
+    //  Image Uploading
+    Dropzone.autoDiscover = false;
+    const dropzone = $('#image').dropzone({
+
+        //  Function for single image upload condition
+        init: function() {
+            this.on('addedfile', function(file) {
+                if (this.files.length > 1) {
+                    this.removeFile(this.files[0]);
+                }
+            });
+        },
+
+        url: '{{route("temp-image.create")}}',
+        maxFiles: 1,
+        addRemoveLinks: true,
+        paramName: 'image',
+        acceptedFiles: "image/gif, image/png, image/jpeg,",
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
+        success: function(file, response){
+            $('#image_id').val(response['image_id']);
+        }
     });
 </script>
 

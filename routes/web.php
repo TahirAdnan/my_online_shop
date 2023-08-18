@@ -3,6 +3,7 @@
 use App\Http\Controllers\admin\AdminLoginController;
 use App\Http\Controllers\admin\HomeController;
 use App\Http\Controllers\admin\CategoryController;
+use App\Http\Controllers\admin\TempImageController;
 use GuzzleHttp\Psr7\Request;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Validator;
@@ -38,8 +39,7 @@ Route::group(['prefix' => 'admin'], function(){
         Route::get('/categories', [CategoryController::class, 'index'] )->name('categories.index');
         Route::get('/categories/create', [CategoryController::class, 'create'] )->name('categories.create');
         Route::post('/categories', [CategoryController::class, 'store'] )->name('categories.store');
-
         Route::get('/getSlug', [CategoryController::class, 'getSlug'] )->name('getSlug');
-
+        Route::post('/temp-image-create', [TempImageController::class, 'create'] )->name('temp-image.create');
     });
 });
