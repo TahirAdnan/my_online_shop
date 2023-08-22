@@ -9,6 +9,7 @@ use App\Models\Category;
 use App\Models\TempImage;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\File;
+use Intervention\Image\Facades\Image as Image;
 
 class CategoryController extends Controller
 {
@@ -45,18 +46,30 @@ class CategoryController extends Controller
             if (!empty($request->image_id)) {
                 $tempImage = TempImage::find($request->image_id);
 
+                // Image extension + Image path + select already saved image path
                 $ext = pathinfo($tempImage->name, PATHINFO_EXTENSION);
                 $newName = $categories->id . '.' . $ext;
                 $spath = public_path('temp/') . $tempImage->name;
 
+                // Destination directory check
                 $dpath = public_path('uploads/category/');
                 !is_dir($dpath) && mkdir($dpath, 0777, true);
 
+                // Copy image from temp dir to uploads/category
                 $fileNameWithPath = $dpath . $newName;
-                if (File::copy($spath, $fileNameWithPath)) {
-                    $categories->image = $newName;
-                    $categories->save();
-                }
+                File::copy($spath, $fileNameWithPath);
+
+                // Save image name
+                $categories->image = $newName;
+                $categories->save();
+
+                // Thumbnail directory creation check
+                $thumbnailPath = public_path('uploads/category/thumb/');
+                !is_dir($thumbnailPath) && mkdir($thumbnailPath, 0777, true);
+
+                // Generate image thumbnail
+                $dpath = $thumbnailPath . $newName;
+                Image::make($spath)->resize('450', '450')->save($dpath);
             }
 
             session()->flash('success', 'Category added successfully');
