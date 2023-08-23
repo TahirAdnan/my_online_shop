@@ -38,6 +38,7 @@ Route::group(['prefix' => 'admin'], function(){
         // Create category
         Route::get('/categories', [CategoryController::class, 'index'] )->name('categories.index');
         Route::get('/categories/create', [CategoryController::class, 'create'] )->name('categories.create');
+        Route::get('/categories/{category}/edit', [CategoryController::class, 'edit'] )->name('categories.edit');
         Route::post('/categories', [CategoryController::class, 'store'] )->name('categories.store');
         Route::get('/getSlug', [CategoryController::class, 'getSlug'] )->name('getSlug');
         Route::post('/temp-image-create', [TempImageController::class, 'create'] )->name('temp-image.create');

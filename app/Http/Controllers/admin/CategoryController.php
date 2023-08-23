@@ -85,6 +85,15 @@ class CategoryController extends Controller
         }
     }
 
+    public function edit($categoryId, Request $request)
+    {
+        $Category = Category::find($categoryId);
+        return view('admin.category.edit', [
+            'category' => $Category,
+        ]);
+        // return view('admin.category.edit', compact('request'));
+    }
+
     // Slug generation
     public function getSlug(Request $request)
     {
