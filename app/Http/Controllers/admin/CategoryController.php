@@ -69,7 +69,12 @@ class CategoryController extends Controller
 
                 // Generate image thumbnail
                 $dpath = $thumbnailPath . $newName;
-                Image::make($spath)->resize('450', '450')->save($dpath);
+                $img = Image::make($spath);
+                // $img->resize('450', '450');
+                $img->fit(250, 250, function ($constraint) {
+                    $constraint->upsize();
+                });
+                $img->save($dpath);
             }
 
             session()->flash('success', 'Category added successfully');
@@ -85,13 +90,100 @@ class CategoryController extends Controller
         }
     }
 
+    // Edit category function
     public function edit($categoryId, Request $request)
     {
         $Category = Category::find($categoryId);
         return view('admin.category.edit', [
             'category' => $Category,
         ]);
-        // return view('admin.category.edit', compact('request'));
+    }
+
+    // update a category function
+    public function update(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'name' => 'required',
+            'slug' => 'required|unique:categories,slug,$category->id,id',
+        ]);
+
+        if ($validator->passes()) {
+            $categories = Category::find($request->id);
+            $categories->name = $request->name;
+            $categories->slug = $request->slug;
+            $categories->status = $request->status;
+            $categories->save();
+
+            $old_image = $categories->image;
+
+            if (!empty($request->image_id)) {
+                $tempImage = TempImage::find($request->image_id);
+
+                // Image extension + Image path + select already saved image path
+                $ext = pathinfo($tempImage->name, PATHINFO_EXTENSION);
+                $newName = $categories->id . '-' . time() . '.' . $ext;
+                $spath = public_path('temp/') . $tempImage->name;
+
+                // Destination directory check
+                $dpath = public_path('uploads/category/');
+                !is_dir($dpath) && mkdir($dpath, 0777, true);
+
+                // Copy image from temp dir to uploads/category
+                $fileNameWithPath = $dpath . $newName;
+                File::copy($spath, $fileNameWithPath);
+
+                // Save image name
+                $categories->image = $newName;
+                $categories->save();
+
+                // Thumbnail directory creation check
+                $thumbnailPath = public_path('uploads/category/thumb/');
+                !is_dir($thumbnailPath) && mkdir($thumbnailPath, 0777, true);
+
+                // Generate image thumbnail
+                $dpath = $thumbnailPath . $newName;
+                $img = Image::make($spath);
+                // $img->resize('450', '450');
+                $img->fit(250, 250, function ($constraint) {
+                    $constraint->upsize();
+                });
+                $img->save($dpath);
+
+                // Delete Old images
+                File::delete(public_path('uploads/category/thumb/' . $old_image));
+                File::delete(public_path('uploads/category/' . $old_image));
+            }
+
+            session()->flash('success', 'Category updated successfully');
+            return response()->json([
+                'status' => true,
+                'message' => 'Category updated successfully'
+            ]);
+        } else {
+            return response()->json([
+                'status' => false,
+                'errors' => $validator->errors(),
+            ]);
+        }
+    }
+
+    // Delete a category
+    public function delete($categoryId, Request $request)
+    {
+        $category = Category::find($categoryId);
+        
+        // Delete images
+        File::delete(public_path('uploads/category/thumb/' . $category->image));
+        File::delete(public_path('uploads/category/' . $category->image));
+
+        // Delete category
+        $category->delete();
+
+        session()->flash('success', 'Category deleted successfully');
+        return response()->json([
+            'status' => true,
+            'message' => 'Category deleted successfullly',
+        ]);
     }
 
     // Slug generation

@@ -28,6 +28,7 @@
                             <div class="mb-3">
                                 <label for="name">Name</label>
                                 <input value="{{$category->name}}" type="text" name="name" id="name" class="form-control" placeholder="Name">
+                                <input value="{{$category->id}}" type="hidden" name="id" id="id" class="form-control">
                                 <p></p>
                             </div>
                         </div>
@@ -65,7 +66,7 @@
                 </div>
             </div>
             <div class="pb-5 pt-3">
-                <button type="submit" id="createBtn" class="btn btn-primary">Create</button>
+                <button type="submit" id="createBtn" class="btn btn-primary">Update</button>
                 <a href="#" class="btn btn-outline-dark ml-3">Cancel</a>
             </div>
         </form>
@@ -84,7 +85,7 @@
         var element = $(this);
         $('#createBtn').prop('disabled', true);
         $.ajax({
-            url: '{{ route("categories.store") }}',
+            url: '{{ route("categories.update") }}',
             type: 'post',
             data: element.serializeArray(),
             dataType: 'json',
