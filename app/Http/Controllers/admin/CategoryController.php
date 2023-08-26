@@ -75,6 +75,9 @@ class CategoryController extends Controller
                     $constraint->upsize();
                 });
                 $img->save($dpath);
+                
+                // Delete Old images
+                File::delete(public_path('temp/' . $tempImage->name));
             }
 
             session()->flash('success', 'Category added successfully');
@@ -152,6 +155,7 @@ class CategoryController extends Controller
                 // Delete Old images
                 File::delete(public_path('uploads/category/thumb/' . $old_image));
                 File::delete(public_path('uploads/category/' . $old_image));
+                File::delete(public_path('temp/' . $tempImage->name));
             }
 
             session()->flash('success', 'Category updated successfully');
