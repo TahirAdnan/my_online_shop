@@ -7,16 +7,26 @@ use Illuminate\Http\Request;
 use App\Models\SubCategory;
 use App\Models\Category;
 use Illuminate\Support\Facades\Validator;
-use App\Models\TempImage;
-use Illuminate\Support\Str;
+use Illuminate\Support\Facades\DB;
 
 class SubCategoryController extends Controller
 {
     public function index(Request $request)
     {
-        $sub_categories = SubCategory::latest();
-        if (!empty($request)) {
-            $sub_categories = $sub_categories->where('name', 'like', '%' . $request->keyword . '%');
+
+    //   Eloquent ORM Query 
+        // $sub_categories = SubCategory::latest()
+        //                             ->select('sub_categories.*', 'categories.name as categoryName')
+        //                             ->leftJoin("categories", "categories.id", "=", "sub_categories.category_id");  
+    
+    //  Query Builder query but (Include Facades\DB;)
+        $sub_categories = DB::table('sub_categories')
+        ->latest()
+        ->select('sub_categories.*', 'categories.name as categoryName')
+        ->leftJoin("categories", "categories.id", "=", "sub_categories.category_id");  
+
+        if (!empty($request->get('keyword'))) {
+            $sub_categories = $sub_categories->where('name', 'like', '%' . $request->get('keyword') . '%');
         }
         $sub_categories =  $sub_categories->paginate(10);
         return view('admin.sub_category.list', compact('sub_categories'));
