@@ -6,6 +6,7 @@ use App\Http\Controllers\admin\CategoryController;
 use App\Http\Controllers\admin\SubCategoryController;
 use App\Http\Controllers\admin\TempImageController;
 use App\Http\Controllers\admin\BrandController;
+use App\Http\Controllers\admin\ProductController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Validator;
 use GuzzleHttp\Psr7\Request;
@@ -66,7 +67,11 @@ Route::group(['prefix' => 'admin'], function () {
         // Edit Brand
         Route::get('/brands/{category}/edit', [BrandController::class, 'edit'])->name('brands.edit');
         Route::post('/brands/update', [BrandController::class, 'update'])->name('brands.update');
-        Route::delete('/brands/{category}', [BrandController::class, 'delete'])->name('brands.delete');        
+        Route::delete('/brands/{category}', [BrandController::class, 'delete'])->name('brands.delete');    
+        
+        
+    // Create Products
+        Route::get('/products/create', [ProductController::class, 'create'])->name('products.create');
 
     });
 });

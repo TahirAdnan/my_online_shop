@@ -146,7 +146,7 @@
         headers: {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
         },
-        success: function(file, response){
+        success: function(file, response) {
             $('#image_id').val(response['image_id']);
         }
     });
