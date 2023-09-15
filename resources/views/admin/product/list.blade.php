@@ -54,10 +54,19 @@
                     <tbody>
                         @if($products->isNotEmpty())
                         @foreach($products as $product)
+
+                        @php
+                            $productImage = $product->product_images;
+                        @endphp                  
                         <tr>
                             <td>{{$product->id}}</td>
-                            <!-- <td><img src="{{ asset('admin-assets/img/product-1.jpg') }}" class="img-thumbnail" width="50" ></td> -->
-                            <td><img src="{{ asset('uploads/product/thumb/.$product->image') }}" class="img-thumbnail" width="50" ></td>
+                            <td>
+                            @if($product->product_images->isNotEmpty())
+                                <img src="{{ asset('uploads/product/thumb/'.$productImage->first()->image) }}" class="img-thumbnail" width="50" >
+                            @else
+                                <img src="{{ asset('admin-assets/img/product-1.jpg') }}" class="img-thumbnail" width="50" >
+                            @endif
+                            </td>
                             <td><a href="#">{{$product->title}}</a></td>
                             <td>${{$product->price}}</td>
                             <td>{{$product->qty}} left in Stock</td>

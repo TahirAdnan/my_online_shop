@@ -17,25 +17,12 @@ use Intervention\Image\Facades\Image as Image;
 class ProductController extends Controller
 {
 
-    public function index(Request $request)
+    public function index()
     {
-        $products = ProductImage::latest()
-                            ->leftJoin('products','product_images.product_id','=','products.id')
-                            ->select('products.*','product_images.image','product_images.id as image_id')      
-                            ->orderBy('products.created_at', 'desc') 
-                            ->paginate(10);                  
-                            // ->get(); 
-                        
-                            // echo '<pre>';
-                            // var_dump($products); 
-                            // die;    
- 
-
-        $products = Product::latest();
+        $products = Product::latest()->with('product_images')->paginate(10);
         if (!empty($request)) {
             $products = $products->where('title', 'like', '%' . $request->keyword . '%');
         }
-        $products =  $products->paginate(10);
         return view('admin.product.list', compact('products'));
     }
 
