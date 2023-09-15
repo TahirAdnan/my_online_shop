@@ -23,6 +23,7 @@
         @include('admin.message')
         <div class="card">
             <form action="{{route('products.index')}}" method="get">
+                @csrf
                 <div class="card-header">
                     <a href="{{route('products.index')}}" class="btn btn-outline-dark ml-3">Reset</a>
                     <div class="card-tools">

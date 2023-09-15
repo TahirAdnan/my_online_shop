@@ -77,7 +77,7 @@ Route::group(['prefix' => 'admin'], function () {
         Route::post('/store', [ProductController::class, 'store'])->name('products.store');
         // Edit Brand
         Route::get('/products/{product}/edit', [ProductController::class, 'edit'])->name('products.edit');
-        Route::post('/products/update', [ProductController::class, 'update'])->name('products.update');
+        Route::put('/products/{update}', [ProductController::class, 'update'])->name('products.update');
         Route::delete('/products/{product}', [ProductController::class, 'delete'])->name('products.delete');    
 
     });

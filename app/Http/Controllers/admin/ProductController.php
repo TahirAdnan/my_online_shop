@@ -17,12 +17,13 @@ use Intervention\Image\Facades\Image as Image;
 class ProductController extends Controller
 {
 
-    public function index()
-    {
-        $products = Product::latest()->with('product_images')->paginate(10);
-        if (!empty($request)) {
+    public function index(Request $request){
+        $products = Product::latest()->with('product_images');
+        if ($request->get('keyword')!= "") {
             $products = $products->where('title', 'like', '%' . $request->keyword . '%');
         }
+        
+        $products = $products->paginate(10);
         return view('admin.product.list', compact('products'));
     }
 
@@ -37,8 +38,8 @@ class ProductController extends Controller
     public function getSubCategory(Request $request){
         if(!empty($request->category_id)){
             $sub_categories = SubCategory::where('category_id', $request->category_id)
-            ->orderBy("name","ASC")
-            ->get();
+                            ->orderBy("name","ASC")
+                            ->get();
 
             return response()->json([
                 'status' => true,
@@ -55,9 +56,9 @@ class ProductController extends Controller
     public function store(Request $request){
         $validator = Validator::make($request->all(), [
             'title' => 'required',
-            'slug' => 'required|unique:products',
+            'slug' => 'required|unique:products,slug',
             'price' => 'required|numeric',
-            'sku' => 'required',
+            'sku' => 'required|unique:products,sku',
             'track_qty' => 'required|in:Yes,No',
             'category' => 'required|numeric',
             'is_featured' => 'required|in:Yes,No',
@@ -132,46 +133,44 @@ class ProductController extends Controller
     }
 
     // Edit product function
-    public function edit($productId, Request $request)
+    public function edit($productId)
     {
-        $product = ProductImage::latest()
-                            ->leftJoin('products','product_images.product_id','=','products.id')
-                            ->select('products.*','product_images.image','product_images.id as image_id')
-                            ->where('products.id', $productId)                            
-                            ->get(); 
+        $product = Product::find($productId);
+        $productImages = ProductImage::where('product_id',$productId)->get();
+        $categories = Category::orderBy("name","ASC")->get();
+        $sub_catogries = SubCategory::orderBy("name","ASC")->get();
+        $brands = Brand::orderBy("name","ASC")->get();
 
-        $categories = Category::get();
-        $brands = Brand::get();
-        $subCategory = SubCategory::where('category_id',$product[0]['category_id'])->get();
-                                                      
+// dd($productImages->first());
 // echo '<pre>';
-// var_dump($product[0]); 
-// die;                            
-         
-        
+// var_dump($product);
+// die;
+
         return view('admin.product.edit', [
             'product' => $product,
+            'productImages' => $productImages,
             'categories' => $categories,
-            'sub_catogries' => $subCategory,
+            'sub_catogries' => $sub_catogries,
             'brands' => $brands,
         ]);
     }
 
     // update a product function
-    public function update(Request $request)
+    public function update($id, Request $request)
     {
+        $products = Product::find($id);
         $validator = Validator::make($request->all(), [
             'title' => 'required',
-            'slug' => 'required|unique:products',
+            'slug' => 'required|unique:products,slug,'.$products->id.',id',
             'price' => 'required|numeric',
-            'sku' => 'required',
+            'sku' => 'required|unique:products,sku,'.$products->id.',id',
             'track_qty' => 'required|in:Yes,No',
             'category' => 'required|numeric',
             'is_featured' => 'required|in:Yes,No',
         ]);
 
         if ($validator->passes()) {
-            $products = Product::find($request->id);
+            // $products = Product::find($request->id);
             $products->title = $request->title;
             $products->slug = $request->slug;
             $products->status = $request->status;
@@ -236,6 +235,15 @@ class ProductController extends Controller
                 'errors' => $validator->errors(),
             ]);
         }
+    }
+
+    public function updateProductImage(Request $request)
+    {
+        // Save image name in DB
+        $products_image = new ProductImage();
+        $products_image->product_id = $request->product_id;
+        $products_image->image = $request->image;
+        $products_image->save();
     }
 
     // Delete a product
