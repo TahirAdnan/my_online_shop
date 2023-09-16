@@ -109,6 +109,25 @@ class SubCategoryController extends Controller
         }  
     }  
 
+    public function getSubCategory(Request $request)
+    {
+        if (!empty($request->category_id)) {
+            $sub_categories = SubCategory::where('category_id', $request->category_id)
+                ->orderBy("name", "ASC")
+                ->get();
+
+            return response()->json([
+                'status' => true,
+                'sub_categories' => $sub_categories,
+            ]);
+        } else {
+            return response()->json([
+                'status' => false,
+                'sub_categories' => [],
+            ]);
+        }
+    }
+
     // Delete a category
     public function delete($categoryId, Request $request)
     {

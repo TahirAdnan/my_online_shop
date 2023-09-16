@@ -17,43 +17,28 @@ use Intervention\Image\Facades\Image as Image;
 class ProductController extends Controller
 {
 
-    public function index(Request $request){
+    public function index(Request $request)
+    {
         $products = Product::latest()->with('product_images');
-        if ($request->get('keyword')!= "") {
+        if ($request->get('keyword') != "") {
             $products = $products->where('title', 'like', '%' . $request->keyword . '%');
         }
-        
+
         $products = $products->paginate(10);
         return view('admin.product.list', compact('products'));
     }
 
-    public function create(){
-        $categories = Category::orderBy("name","ASC")->get();
-        $brands = Brand::orderBy("name","ASC")->get();
+    public function create()
+    {
+        $categories = Category::orderBy("name", "ASC")->get();
+        $brands = Brand::orderBy("name", "ASC")->get();
         $data['categories'] = $categories;
         $data['brands'] = $brands;
         return view('admin.product.create', $data);
     }
 
-    public function getSubCategory(Request $request){
-        if(!empty($request->category_id)){
-            $sub_categories = SubCategory::where('category_id', $request->category_id)
-                            ->orderBy("name","ASC")
-                            ->get();
-
-            return response()->json([
-                'status' => true,
-                'sub_categories' => $sub_categories,
-            ]);
-        } else {
-            return response()->json([
-                'status' => false,
-                'sub_categories' => [],
-            ]);
-        }                                        
-    }
-
-    public function store(Request $request){
+    public function store(Request $request)
+    {
         $validator = Validator::make($request->all(), [
             'title' => 'required',
             'slug' => 'required|unique:products,slug',
@@ -72,9 +57,9 @@ class ProductController extends Controller
             $products->description = $request->description;
             $products->price = $request->price;
             $products->compare_price = $request->compare_price;
-            $products->category_id  = $request->category ;
-            $products->sub_category_id  = $request->sub_category ;
-            $products->brand_id  = $request->brand;
+            $products->category_id = $request->category;
+            $products->sub_category_id = $request->sub_category;
+            $products->brand_id = $request->brand;
             $products->is_featured = $request->is_featured;
             $products->sku = $request->sku;
             $products->barcode = $request->barcode;
@@ -83,12 +68,12 @@ class ProductController extends Controller
             $products->save();
 
             if (!empty($request->image_array)) {
-                foreach($request->image_array as $temp_image_id){
+                foreach ($request->image_array as $temp_image_id) {
 
                     //Get temp image make new name and path
                     $tempImage = TempImage::find($temp_image_id);
                     $ext = pathinfo($tempImage->name, PATHINFO_EXTENSION);
-                    $newName = $products->id .'-'. $temp_image_id .'-'. time() . '.' . $ext;
+                    $newName = $products->id . '-' . $temp_image_id . '-' . time() . '.' . $ext;
                     $spath = public_path('temp/') . $tempImage->name;
 
                     // Save image name in DB
@@ -104,7 +89,7 @@ class ProductController extends Controller
                     $image->resize(1400, null, function ($constraint) {
                         $constraint->aspectRatio();
                     });
-                    $image->save($dpath.$newName);
+                    $image->save($dpath . $newName);
 
                     // Thumbnail directory creation check and thumbnail storage
                     $thumbnailPath = public_path('uploads/product/thumb/');
@@ -112,7 +97,7 @@ class ProductController extends Controller
                     $img = Image::make($spath);
                     $img->fit(300, 275);
                     $img->save($thumbnailPath . $newName);
-                    
+
                     // Delete Old images
                     File::delete(public_path('temp/'));
                     File::delete(public_path('temp/thumb/'));
@@ -136,15 +121,10 @@ class ProductController extends Controller
     public function edit($productId)
     {
         $product = Product::find($productId);
-        $productImages = ProductImage::where('product_id',$productId)->get();
-        $categories = Category::orderBy("name","ASC")->get();
-        $sub_catogries = SubCategory::orderBy("name","ASC")->get();
-        $brands = Brand::orderBy("name","ASC")->get();
-
-// dd($productImages->first());
-// echo '<pre>';
-// var_dump($product);
-// die;
+        $productImages = ProductImage::where('product_id', $productId)->get();
+        $categories = Category::orderBy("name", "ASC")->get();
+        $sub_catogries = SubCategory::orderBy("name", "ASC")->get();
+        $brands = Brand::orderBy("name", "ASC")->get();
 
         return view('admin.product.edit', [
             'product' => $product,
@@ -161,9 +141,9 @@ class ProductController extends Controller
         $products = Product::find($id);
         $validator = Validator::make($request->all(), [
             'title' => 'required',
-            'slug' => 'required|unique:products,slug,'.$products->id.',id',
+            'slug' => 'required|unique:products,slug,' . $products->id . ',id',
             'price' => 'required|numeric',
-            'sku' => 'required|unique:products,sku,'.$products->id.',id',
+            'sku' => 'required|unique:products,sku,' . $products->id . ',id',
             'track_qty' => 'required|in:Yes,No',
             'category' => 'required|numeric',
             'is_featured' => 'required|in:Yes,No',
@@ -177,53 +157,16 @@ class ProductController extends Controller
             $products->description = $request->description;
             $products->price = $request->price;
             $products->compare_price = $request->compare_price;
-            $products->category_id  = $request->category ;
-            $products->sub_category_id  = $request->sub_category ;
-            $products->brand_id  = $request->brand;
+            $products->category_id = $request->category;
+            $products->sub_category_id = $request->sub_category;
+            $products->brand_id = $request->brand;
             $products->is_featured = $request->is_featured;
             $products->sku = $request->sku;
             $products->barcode = $request->barcode;
             $products->track_qty = $request->track_qty;
             $products->qty = $request->qty;
             $products->save();
-
-            if (!empty($request->image_array)) {
-                foreach($request->image_array as $temp_image_id){
-
-                    //Get temp image make new name and path
-                    $tempImage = TempImage::find($temp_image_id);
-                    $ext = pathinfo($tempImage->name, PATHINFO_EXTENSION);
-                    $newName = $products->id .'-'. $temp_image_id .'-'. time() . '.' . $ext;
-                    $spath = public_path('temp/') . $tempImage->name;
-
-                    // Save image name in DB
-                    $products_image = new ProductImage();
-                    $products_image->image = $newName;
-                    $products_image->product_id = $products->id;
-                    $products_image->save();
-
-                    // Image Destination directory creation check and image storage
-                    $dpath = public_path('uploads/product/');
-                    !is_dir($dpath) && mkdir($dpath, 0777, true);
-                    $image = Image::make($spath);
-                    $image->resize(1400, null, function ($constraint) {
-                        $constraint->aspectRatio();
-                    });
-                    $image->save($dpath.$newName);
-
-                    // Thumbnail directory creation check and thumbnail storage
-                    $thumbnailPath = public_path('uploads/product/thumb/');
-                    !is_dir($thumbnailPath) && mkdir($thumbnailPath, 0777, true);
-                    $img = Image::make($spath);
-                    $img->fit(300, 275);
-                    $img->save($thumbnailPath . $newName);
-                    
-                    // Delete Old images
-                    File::delete(public_path('temp/' . $tempImage->name));
-                    File::delete(public_path('temp/thumb/' . $tempImage->name));
-                }
-            }
-
+            
             session()->flash('success', 'Product updated successfully');
             return response()->json([
                 'status' => true,
@@ -237,20 +180,11 @@ class ProductController extends Controller
         }
     }
 
-    public function updateProductImage(Request $request)
-    {
-        // Save image name in DB
-        $products_image = new ProductImage();
-        $products_image->product_id = $request->product_id;
-        $products_image->image = $request->image;
-        $products_image->save();
-    }
-
     // Delete a product
     public function delete($productId, Request $request)
     {
         $product = Product::find($productId);
-        
+
         // Delete images
         File::delete(public_path('uploads/product/thumb/' . $product->image));
         File::delete(public_path('uploads/product/' . $product->image));
@@ -263,5 +197,5 @@ class ProductController extends Controller
             'status' => true,
             'message' => 'Product deleted successfullly',
         ]);
-    }    
+    }
 }

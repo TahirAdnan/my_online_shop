@@ -7,6 +7,7 @@ use App\Http\Controllers\admin\SubCategoryController;
 use App\Http\Controllers\admin\TempImageController;
 use App\Http\Controllers\admin\BrandController;
 use App\Http\Controllers\admin\ProductController;
+use App\Http\Controllers\admin\ProductImageController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Validator;
 use GuzzleHttp\Psr7\Request;
@@ -38,6 +39,7 @@ Route::group(['prefix' => 'admin'], function () {
         Route::get('/dashboard', [HomeController::class, 'index'])->name('admin.dashboard');
         Route::get('/logout', [HomeController::class, 'logout'])->name('admin.logout');
 
+
     // Create Categories
         Route::get('/categories', [CategoryController::class, 'index'])->name('categories.index');
         Route::get('/categories/create', [CategoryController::class, 'create'])->name('categories.create');
@@ -54,6 +56,7 @@ Route::group(['prefix' => 'admin'], function () {
         Route::get('/sub-categories', [SubCategoryController::class, 'index'])->name('subCategories.index');
         Route::get('/sub-categories/create', [SubCategoryController::class, 'create'])->name('subCategories.create');
         Route::post('/sub-categories', [SubCategoryController::class, 'store'])->name('subCategories.store');
+        Route::get('/getSubCategory', [SubCategoryController::class, 'getSubCategory'])->name('getSubCategory');
         // Edit Sub-category
         Route::get('/sub-categories/{category}/edit', [SubCategoryController::class, 'edit'])->name('subCategories.edit');
         Route::post('/sub-categories/update', [SubCategoryController::class, 'update'])->name('subCategories.update');
@@ -73,12 +76,16 @@ Route::group(['prefix' => 'admin'], function () {
     // Create Products
         Route::get('/products', [ProductController::class, 'index'])->name('products.index');
         Route::get('/products/create', [ProductController::class, 'create'])->name('products.create');
-        Route::get('/getSubCategory', [ProductController::class, 'getSubCategory'])->name('getSubCategory');
         Route::post('/store', [ProductController::class, 'store'])->name('products.store');
-        // Edit Brand
+        // Edit product
         Route::get('/products/{product}/edit', [ProductController::class, 'edit'])->name('products.edit');
         Route::put('/products/{update}', [ProductController::class, 'update'])->name('products.update');
         Route::delete('/products/{product}', [ProductController::class, 'delete'])->name('products.delete');    
+
+
+    //  Product Image Update
+        Route::post('product_image_update/{product_id}', [ProductImageController::class, 'updateProductImage'])->name('productImage.update');
+        Route::delete('product_image_delete', [ProductImageController::class, 'productImageDelete'])->name('productImage.delete');    
 
     });
 });

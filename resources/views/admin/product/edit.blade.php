@@ -273,7 +273,7 @@
     //  Image Uploading
     Dropzone.autoDiscover = false;
     const dropzone = $('#image').dropzone({
-        url: '{{route("temp-image.create")}}',
+        url: '{{route("productImage.update",$product->id)}}',
         maxFiles: 10,
         addRemoveLinks: true,
         paramName: 'image',
@@ -303,7 +303,25 @@
 
     // Delete card image
     function deleteImage(id) {
-        $("#image-row-" + id).remove();
+        if (confirm("Are you sure you want to delete this image")) {
+            $.ajax({
+                url: '{{ route("productImage.delete") }}',
+                type: 'delete',
+                data: {
+                    id: id
+                },
+                dataType: 'json',
+                success: function(response) {
+                    // console.log(response);
+                    if (response['status'] == true) {
+                        $("#image-row-" + id).remove();
+                    }
+                },
+                error: function(jqXHR, exception) {
+                    console.log("Something went wrong");
+                }
+            });  
+        }      
     }
 
     // Validation and product store ajax function
