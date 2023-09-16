@@ -77,7 +77,9 @@ class CategoryController extends Controller
                 $img->save($dpath);
                 
                 // Delete Old images
+                $tempImage->delete();
                 File::delete(public_path('temp/' . $tempImage->name));
+                File::delete(public_path('temp/thumb/' . $tempImage->name));
             }
 
             session()->flash('success', 'Category added successfully');
@@ -107,7 +109,7 @@ class CategoryController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'name' => 'required',
-            'slug' => 'required|unique:categories,slug,$category->id,id',
+            'slug' => 'required|unique:categories,slug,'.$request->id.',id',
         ]);
 
         if ($validator->passes()) {
@@ -153,9 +155,11 @@ class CategoryController extends Controller
                 $img->save($dpath);
 
                 // Delete Old images
+                $tempImage->delete();
                 File::delete(public_path('uploads/category/thumb/' . $old_image));
                 File::delete(public_path('uploads/category/' . $old_image));
                 File::delete(public_path('temp/' . $tempImage->name));
+                File::delete(public_path('temp/thumb/' . $tempImage->name));
             }
 
             session()->flash('success', 'Category updated successfully');
