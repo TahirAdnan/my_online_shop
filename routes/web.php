@@ -8,6 +8,7 @@ use App\Http\Controllers\admin\TempImageController;
 use App\Http\Controllers\admin\BrandController;
 use App\Http\Controllers\admin\ProductController;
 use App\Http\Controllers\admin\ProductImageController;
+use App\Http\Controllers\FrontController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Validator;
 use GuzzleHttp\Psr7\Request;
@@ -23,9 +24,12 @@ use GuzzleHttp\Psr7\Request;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+// Route::get('/', function () {
+//     return view('welcome');
+// });
+
+// Frontend Routes
+    Route::get('/',[FrontController::class, 'index'])->name('front.index');
 
 //  Admin panel routes
 Route::group(['prefix' => 'admin'], function () {
