@@ -47,16 +47,25 @@
                         <div class="col-md-6">
                             <div class="mb-3">
                                 <label for="slug">Slug</label>
-                                <input value="{{$sub_catogries->slug}}" type="text" readonly name="slug" id="slug" class="form-control" placeholder="Slug">
+                                <input value="{{$sub_catogries->slug}}" type="text" name="slug" id="slug" class="form-control" placeholder="Slug">
                                 <p></p>
                             </div>
                         </div>
-                        <div class="col-md-12">
+                        <div class="col-md-6">
                             <div class="mb-3">
                                 <label for="status">Status</label>
                                 <select name="status" id="status" class="form-control">
                                     <option {{ $sub_catogries->status == '1' ? 'selected':'' }} value="1">Active</option>
                                     <option {{ $sub_catogries->status == '0' ? 'selected':'' }} value="0">Block</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="showHome">Show Home</label>
+                                <select name="showHome" id="showHome" class="form-control">
+                                    <option {{ $sub_catogries->show_home == 'Yes' ? 'selected':'' }} value="Yes">Yes</option>
+                                    <option {{ $sub_catogries->show_home == 'No' ? 'selected':'' }} value="No">No</option>
                                 </select>
                             </div>
                         </div>

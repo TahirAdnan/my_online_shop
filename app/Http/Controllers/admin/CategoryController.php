@@ -41,6 +41,7 @@ class CategoryController extends Controller
             $categories->name = $request->name;
             $categories->slug = $request->slug;
             $categories->status = $request->status;
+            $categories->show_home = $request->showHome;
             $categories->save();
 
             if (!empty($request->image_id)) {
@@ -117,6 +118,7 @@ class CategoryController extends Controller
             $categories->name = $request->name;
             $categories->slug = $request->slug;
             $categories->status = $request->status;
+            $categories->show_home = $request->showHome;
             $categories->save();
 
             $old_image = $categories->image;

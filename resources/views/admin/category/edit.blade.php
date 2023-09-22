@@ -50,6 +50,15 @@
                         </div>
                         <div class="col-md-6">
                             <div class="mb-3">
+                                <label for="status">Show Home</label>
+                                <select name="showHome" id="showHome" class="form-control">
+                                    <option {{ $category->show_home == 'Yes' ? 'selected':'' }} value="Yes">Yes</option>
+                                    <option {{ $category->show_home == 'No' ? 'selected':'' }} value="No">No</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
                                 <label for="image">Image</label>
                                 <input type="hidden" name="image_id" id="image_id" class="form-control">
                                 <div id="image" class="dropzone dz-clickable">
