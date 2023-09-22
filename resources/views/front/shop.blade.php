@@ -26,24 +26,24 @@
                         <div class="accordion accordion-flush" id="accordionExample">
                             @if($categories->isNotEmpty())
                             @foreach($categories as $key => $category)
-                                <div class="accordion-item">
-                                    <h2 class="accordion-header" id="headingOne-{{$key}}">
-                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne-{{$key}}" aria-expanded="false" aria-controls="collapseOne-{{$key}}">
-                                            {{$category->name}}
-                                        </button>
-                                    </h2>
-                                    @if($category->sub_categories->isNotEmpty())
-                                        <div id="collapseOne-{{$key}}" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionExample" style="">
-                                            <div class="accordion-body">
-                                                <div class="navbar-nav">                                                    
-                                                    @foreach($category->sub_categories as $sub_category)
-                                                        <a href="" class="nav-item nav-link">{{$sub_category->name}}</a>
-                                                    @endforeach
-                                                </div>
-                                            </div>
+                            <div class="accordion-item">
+                                <h2 class="accordion-header" id="headingOne-{{$key}}">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne-{{$key}}" aria-expanded="false" aria-controls="collapseOne-{{$key}}">
+                                        {{$category->name}}
+                                    </button>
+                                </h2>
+                                @if($category->sub_categories->isNotEmpty())
+                                <div id="collapseOne-{{$key}}" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+                                    <div class="accordion-body">
+                                        <div class="navbar-nav">
+                                            @foreach($category->sub_categories as $sub_category)
+                                            <a href="" class="nav-item nav-link">{{$sub_category->name}}</a>
+                                            @endforeach
                                         </div>
-                                    @endif
+                                    </div>
                                 </div>
+                                @endif
+                            </div>
                             @endforeach
                             @endif
                         </div>
@@ -119,53 +119,53 @@
                     </div>
                     @if($products->isNotEmpty())
                     @foreach($products as $product)
-                        <div class="col-md-4">
-                            <div class="card product-card">
-                                <div class="product-image position-relative">
-                                    <a href="" class="product-img">
-                                        @if($product->product_images->isNotEmpty())
-                                            <img class="card-img-top" src="{{ asset('uploads/product/thumb/'.$product->product_images->first()->image) }}" alt="">
-                                        @endif
-                                    </a>
-                                    <a class="whishlist" href="222"><i class="far fa-heart"></i></a>
+                    <div class="col-md-4">
+                        <div class="card product-card">
+                            <div class="product-image position-relative">
+                                <a href="" class="product-img">
+                                    @if($product->product_images->isNotEmpty())
+                                    <img class="card-img-top" src="{{ asset('uploads/product/thumb/'.$product->product_images->first()->image) }}" alt="">
+                                    @endif
+                                </a>
+                                <a class="whishlist" href="222"><i class="far fa-heart"></i></a>
 
-                                    <div class="product-action">
-                                        <a class="btn btn-dark" href="#">
-                                            <i class="fa fa-shopping-cart"></i> Add To Cart
-                                        </a>
-                                    </div>
+                                <div class="product-action">
+                                    <a class="btn btn-dark" href="#">
+                                        <i class="fa fa-shopping-cart"></i> Add To Cart
+                                    </a>
                                 </div>
-                                <div class="card-body text-center mt-3">
-                                    <a class="h6 link" href="product.php">{{ $product->title }}</a>
-                                    <div class="price mt-2">
-                                        <span class="h5"><strong>${{ $product->compare_price }}</strong></span>
-                                        <span class="h6 text-underline"><del>${{ $product->price }}</del></span>
-                                    </div>
+                            </div>
+                            <div class="card-body text-center mt-3">
+                                <a class="h6 link" href="product.php">{{ $product->title }}</a>
+                                <div class="price mt-2">
+                                    <span class="h5"><strong>${{ $product->compare_price }}</strong></span>
+                                    <span class="h6 text-underline"><del>${{ $product->price }}</del></span>
                                 </div>
                             </div>
                         </div>
+                    </div>
                     @endforeach
                     @endif
-                <div class="col-md-12 pt-5">
-                    {{ $products->links() }}
-                    <!-- <nav aria-label="Page navigation example">
-                        <ul class="pagination justify-content-end">
-                            
-                            <li class="page-item disabled">
-                                <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Previous</a>
-                            </li>
-                            <li class="page-item"><a class="page-link" href="#">1</a></li>
-                            <li class="page-item"><a class="page-link" href="#">2</a></li>
-                            <li class="page-item"><a class="page-link" href="#">3</a></li>
-                            <li class="page-item">
-                                <a class="page-link" href="#">Next</a>
-                            </li>
-                        </ul>
-                    </nav> -->
+                    <div class="col-md-12 pt-5">
+                        {{ $products->links() }}
+                        <!-- <nav aria-label="Page navigation example">
+                            <ul class="pagination justify-content-end">
+                                
+                                <li class="page-item disabled">
+                                    <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Previous</a>
+                                </li>
+                                <li class="page-item"><a class="page-link" href="#">1</a></li>
+                                <li class="page-item"><a class="page-link" href="#">2</a></li>
+                                <li class="page-item"><a class="page-link" href="#">3</a></li>
+                                <li class="page-item">
+                                    <a class="page-link" href="#">Next</a>
+                                </li>
+                            </ul>
+                        </nav> -->
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
     </div>
 </section>
 

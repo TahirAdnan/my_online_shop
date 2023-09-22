@@ -28,11 +28,13 @@ class FrontController extends Controller
         return view('front.home', $data);
     }
 
-    public function shop(){
+    public function shop(Request $request){
         $categories = Category::where('status', '1')->with('sub_categories')->get();
         $brands = Brand::orderBy('id', 'DESC')->where('status', '1')->get();
-        $products = Product::orderBy('id', 'DESC')->with('product_images')->where('status', '1')->with('product_images')->paginate(11);
-
+        $products = Product::orderBy('id', 'DESC')->with('product_images')->where('status', '1')->paginate(11);
+        if ($request->get('keyword') != "") {
+            $products = $products->where('title', 'like', '%' . $request->keyword . '%');
+        }
         $data['categories'] = $categories;
         $data['brands'] = $brands;
         $data['products'] = $products;
