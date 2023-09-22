@@ -30,6 +30,7 @@ use GuzzleHttp\Psr7\Request;
 
 // Frontend Routes
     Route::get('/',[FrontController::class, 'index'])->name('front.index');
+    Route::get('/shop',[FrontController::class, 'shop'])->name('front.shop');
 
 //  Admin panel routes
 Route::group(['prefix' => 'admin'], function () {
