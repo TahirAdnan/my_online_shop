@@ -9,6 +9,7 @@ use App\Http\Controllers\admin\BrandController;
 use App\Http\Controllers\admin\ProductController;
 use App\Http\Controllers\admin\ProductImageController;
 use App\Http\Controllers\FrontController;
+use App\Http\Controllers\ShopController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Validator;
 use GuzzleHttp\Psr7\Request;
@@ -30,7 +31,9 @@ use GuzzleHttp\Psr7\Request;
 
 // Frontend Routes
     Route::get('/',[FrontController::class, 'index'])->name('front.index');
-    Route::get('/shop',[FrontController::class, 'shop'])->name('front.shop');
+
+// Shop Routes    
+    Route::get('/shop/{cat_slug?}/{sub_cat_slug?}',[ShopController::class, 'shop'])->name('front.shop');
 
 //  Admin panel routes
 Route::group(['prefix' => 'admin'], function () {

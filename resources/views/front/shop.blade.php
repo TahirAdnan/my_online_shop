@@ -28,16 +28,16 @@
                             @foreach($categories as $key => $category)
                             <div class="accordion-item">
                                 <h2 class="accordion-header" id="headingOne-{{$key}}">
-                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne-{{$key}}" aria-expanded="false" aria-controls="collapseOne-{{$key}}">
+                                    <button onclick="window.location=`{{ route('front.shop',[$category->slug]) }}`" class="accordion-button collapsed {{($category->id == $categoryId) ? 'text-primary' : ''}}" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne-{{$key}}" aria-expanded="false" aria-controls="collapseOne-{{$key}}">
                                         {{$category->name}}
                                     </button>
                                 </h2>
                                 @if($category->sub_categories->isNotEmpty())
-                                <div id="collapseOne-{{$key}}" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+                                <div id="collapseOne-{{$key}}" class="accordion-collapse collapse {{($category->id == $categoryId) ? 'show' : ''}}" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
                                     <div class="accordion-body">
                                         <div class="navbar-nav">
                                             @foreach($category->sub_categories as $sub_category)
-                                            <a href="" class="nav-item nav-link">{{$sub_category->name}}</a>
+                                            <a href="{{ route('front.shop', [$category->slug, $sub_category->slug]) }}" class="nav-item nav-link {{($sub_category->id == $subCategoryId) ? 'text-primary' : ''}}">{{$sub_category->name}}</a>
                                             @endforeach
                                         </div>
                                     </div>
@@ -145,6 +145,8 @@
                         </div>
                     </div>
                     @endforeach
+                    @else
+                        <div class="accordion-item text-center">Product Not Found</div>
                     @endif
                     <div class="col-md-12 pt-5">
                         {{ $products->links() }}
