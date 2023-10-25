@@ -25,6 +25,7 @@ use GuzzleHttp\Psr7\Request;
 |
 */
 
+// // Home page of ReacJS
 // Route::get('/', function () {
 //     return view('welcome');
 // });
