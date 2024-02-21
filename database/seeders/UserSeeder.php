@@ -5,14 +5,17 @@ namespace Database\Seeders;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
-class SubCategorySeeder extends Seeder
+class UserSeeder extends Seeder
 {
     /**
      * Run the database seeds.
      */
     public function run(): void
     {
-            //  SubCategory data feeding        
-            \App\Models\SubCategory::factory()->count(20)->create();
+        \App\Models\User::factory(1)->create([
+            'name' => 'Admin',
+            'email' => 'test@test.com',
+            'password' => '123',
+        ]);
     }
 }

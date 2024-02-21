@@ -19,6 +19,6 @@ class CategorySeeder extends Seeder
         // ]);
 
     //  Category data feeding        
-        \App\Models\Category::factory()->count(30)->create();
+        \App\Models\Category::factory()->count(10)->create();
     }
 }
