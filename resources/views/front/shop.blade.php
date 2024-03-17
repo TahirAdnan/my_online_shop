@@ -58,8 +58,8 @@
                 <div class="card">
                     <div class="card-body">
                         <div class="form-check mb-2">
-                            <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
-                            <label class="form-check-label" for="flexCheckDefault">
+                            <input class="form-check-input brand-label" type="checkbox" name="brand[]" value="{{$brand->id}}" id="brand-{{$brand->id}}">
+                            <label class="form-check-label" for="brand-{{$brand->id}}">
                                 {{$brand->name}}
                             </label>
                         </div>
@@ -171,4 +171,27 @@
     </div>
 </section>
 
+@endsection 
+
+@section('customJs')
+    <script>
+        $(".brand-label").change (function(){
+            apply_filters();
+        });
+        function apply_filters(){
+            var brands = [];
+           
+            $(".brand-label").each (function(){
+                if ($(this).is(":checked") == true){
+                    brands.push($(this).val());
+                }
+
+            });
+            console.log(brands.toString());
+
+            var url = '{{ url()->current() }}?';
+            window.location.href = url+brands.toString();
+        }
+
+    </script>
 @endsection
