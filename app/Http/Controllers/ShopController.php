@@ -70,4 +70,14 @@ class ShopController extends Controller
         $data['sort'] = $request->get('sort');
         return view('front.shop', $data);
     }
+
+    public function product($slug){
+        $product = Product::where('slug', $slug)->with('product_images')->first();
+        if($product == null){
+            abort(404);
+        }
+
+        return view('front.product');
+        // dd($product);
+    }
 }

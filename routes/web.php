@@ -35,6 +35,7 @@ use GuzzleHttp\Psr7\Request;
 
 // Shop Routes    
     Route::get('/shop/{cat_slug?}/{sub_cat_slug?}',[ShopController::class, 'shop'])->name('front.shop');
+    Route::get('/product/{slug}',[ShopController::class, 'product'])->name('front.product');
 
 //  Admin panel routes
 Route::group(['prefix' => 'admin'], function () {
