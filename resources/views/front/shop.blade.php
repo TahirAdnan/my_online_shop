@@ -121,7 +121,7 @@
                         <div class="accordion-item text-center">Product Not Found</div>
                     @endif
                     <div class="col-md-12 pt-5">
-                        {{ $products->links() }}
+                        {{ $products->WithQueryString()->links() }}
                         <!-- <nav aria-label="Page navigation example">
                             <ul class="pagination justify-content-end">
                                 

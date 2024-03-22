@@ -57,7 +57,7 @@ class ShopController extends Controller
             $subCategoryId = $sub_category->id;
         }
 
-        $products = $products->orderBy('id', 'DESC')->paginate(5);
+        $products = $products->orderBy('id', 'DESC')->paginate(6);
         // dd($products);
         $data['categories'] = $categories;
         $data['brands'] = $brands;
