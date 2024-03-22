@@ -16,6 +16,13 @@ class ShopController extends Controller
         $products = Product::where('status', '1');
         $categoryId = null;
         $subCategoryId = null;
+        $brandsArray = [];
+
+        // echo $request->get('brand'); die;
+        if(!empty($request->get('brand'))){
+            $brandsArray = explode(',',$request->get('brand'));
+            $products = $products->whereIn('brand_id',$brandsArray);
+        }
 
         if (!empty($cat_slug)) {            
             $category = $categories->where('slug', $cat_slug)->first();
@@ -36,6 +43,7 @@ class ShopController extends Controller
         $data['products'] = $products;
         $data['categoryId'] = $categoryId;
         $data['subCategoryId'] = $subCategoryId;
+        $data['brandsArray'] = $brandsArray;
         return view('front.shop', $data);
     }
 }

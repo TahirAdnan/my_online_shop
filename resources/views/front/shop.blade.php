@@ -58,7 +58,7 @@
                 <div class="card">
                     <div class="card-body">
                         <div class="form-check mb-2">
-                            <input class="form-check-input brand-label" type="checkbox" name="brand[]" value="{{$brand->id}}" id="brand-{{$brand->id}}">
+                            <input {{ (in_array($brand->id, $brandsArray)) ? 'checked' : '' }} class="form-check-input brand-label" type="checkbox" name="brand[]" value="{{$brand->id}}" id="brand-{{$brand->id}}">
                             <label class="form-check-label" for="brand-{{$brand->id}}">
                                 {{$brand->name}}
                             </label>
@@ -190,7 +190,7 @@
             console.log(brands.toString());
 
             var url = '{{ url()->current() }}?';
-            window.location.href = url+brands.toString();
+            window.location.href = url+'&brand='+brands.toString();
         }
 
     </script>
