@@ -113,8 +113,8 @@
                             <div class="card-body text-center mt-3">
                                 <a class="h6 link" href="product.php">{{ $product->title }}</a>
                                 <div class="price mt-2">
-                                    <span class="h5"><strong>${{ $product->compare_price }}</strong></span>
-                                    <span class="h6 text-underline"><del>${{ $product->price }}</del></span>
+                                    <span class="h5"><strong>${{ $product->price }}</strong></span>
+                                    <span class="h6 text-underline"><del>${{ $product->compare_price }}</del></span>
                                 </div>
                             </div>
                         </div>
@@ -154,9 +154,9 @@
         type: "double",
         min: 0,
         max: 1000,
-        from: 0,
+        from: {{ $priceMin }},
         step: 10,
-        to: 500,
+        to: {{ $priceMax }},
         skin: "round",
         max_postfix: "+",
         prefix: "$",
@@ -164,6 +164,9 @@
             apply_filters();
         }
     });
+
+        // 2. Save instance to variable
+        var slider = $(".js-range-slider").data("ionRangeSlider");
 
         $(".brand-label").change (function(){
             apply_filters();
@@ -180,7 +183,11 @@
             console.log(brands.toString());
 
             var url = '{{ url()->current() }}?';
-            window.location.href = url+'&brand='+brands.toString();
+            url += '&price_min='+slider.result.from+'&price_max='+slider.result.to;
+            if(brands.length > 0){
+                url += '&brand='+brands.toString()
+            }
+            window.location.href = url;
         }
 
     </script>
